@@ -5,27 +5,169 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>주문 상세</title>
 <style>
-  body { font-family: "Apple SD Gothic Neo", sans-serif; max-width: 600px; margin: 40px auto; padding: 0 16px; color: #1b1d21; }
-  h1 { font-size: 24px; margin-bottom: 24px; }
-  .detail { display: grid; grid-template-columns: 100px 1fr; gap: 16px; }
-  .label { font-weight: 600; }
-  .value { word-break: break-all; }
-  .meta { margin-top: 24px; }
-  a { color: #0d6d64; text-decoration: none; font-size: 14px; }
-  a:hover { text-decoration: underline; }
-  .error { color: #d32f2f; }
-  .loading { color: #999; }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: "Apple SD Gothic Neo", sans-serif;
+    background: #0e1620;
+    color: #fff;
+    min-height: 100vh;
+    padding-bottom: 40px;
+  }
+
+  .header {
+    background: linear-gradient(135deg, #5edb5a 0%, #4ec64e 100%);
+    padding: 20px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 32px;
+  }
+  .header-back {
+    font-size: 24px;
+    cursor: pointer;
+    opacity: 0.9;
+    transition: opacity 0.2s;
+  }
+  .header-back:hover { opacity: 1; }
+  .header-title {
+    font-size: 20px;
+    font-weight: 700;
+    flex: 1;
+  }
+  .header-icon {
+    font-size: 24px;
+    opacity: 0.8;
+  }
+
+  .container { max-width: 600px; margin: 0 auto; padding: 0 20px; }
+
+  .main-price {
+    text-align: center;
+    margin-bottom: 40px;
+  }
+  .price-label {
+    font-size: 14px;
+    color: #a8b5c5;
+    margin-bottom: 8px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+  }
+  .price-value {
+    font-size: 48px;
+    font-weight: 700;
+    color: #5edb5a;
+  }
+
+  .info-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    margin-bottom: 24px;
+  }
+
+  .info-box {
+    background: #1a2534;
+    border: 1px solid #2d3e52;
+    border-radius: 12px;
+    padding: 16px;
+  }
+  .info-box-label {
+    font-size: 12px;
+    color: #7a8998;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 6px;
+  }
+  .info-box-value {
+    font-size: 18px;
+    font-weight: 700;
+    color: #e8eef5;
+  }
+
+  .info-box-large {
+    grid-column: 1 / -1;
+  }
+  .info-box-large .info-box-value {
+    font-size: 16px;
+  }
+
+  .timeline {
+    background: #1a2534;
+    border: 1px solid #2d3e52;
+    border-radius: 12px;
+    padding: 16px;
+    margin-bottom: 24px;
+  }
+  .timeline-label {
+    font-size: 12px;
+    color: #7a8998;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 8px;
+  }
+  .timeline-value {
+    font-size: 16px;
+    color: #e8eef5;
+    font-weight: 600;
+  }
+
+  .button-group {
+    display: flex;
+    gap: 12px;
+  }
+  .btn {
+    flex: 1;
+    padding: 16px;
+    border: none;
+    border-radius: 12px;
+    font-size: 16px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    text-decoration: none;
+    display: block;
+    text-align: center;
+  }
+  .btn-primary {
+    background: #5edb5a;
+    color: #000;
+  }
+  .btn-primary:hover {
+    background: #6fec69;
+    transform: translateY(-2px);
+  }
+  .btn-secondary {
+    background: #2b7ae8;
+    color: #fff;
+  }
+  .btn-secondary:hover {
+    background: #3a88f5;
+    transform: translateY(-2px);
+  }
+
+  .error {
+    text-align: center;
+    color: #ff6b6b;
+    margin: 40px 20px;
+    font-size: 16px;
+  }
+  .loading {
+    text-align: center;
+    color: #a8b5c5;
+    margin: 40px 20px;
+    font-size: 16px;
+  }
 </style>
 </head>
 <body>
-  <h1>주문 상세</h1>
-
-  <div id="detail" class="detail">
-    <div class="loading">로드 중...</div>
+  <div class="header">
+    <div class="header-back" onclick="window.location.href='list.html'">←</div>
+    <div class="header-title" id="header-title">주문 상세</div>
+    <div class="header-icon">☕</div>
   </div>
 
-  <div class="meta">
-    <a href="list.html">← 목록으로</a>
+  <div class="container">
+    <div id="detail" class="loading">로드 중...</div>
   </div>
 
 <script>
@@ -43,27 +185,45 @@ async function load() {
     if (!res.ok) throw new Error('조회 실패');
 
     const data = await res.json();
+    const date = new Date(data.purchased_at);
+    const timeStr = date.toLocaleString('ko-KR');
+
+    document.getElementById('header-title').textContent = `#${data.id}`;
+
     document.getElementById('detail').innerHTML = `
-      <div class="label">주문 번호</div>
-      <div class="value">${data.id}</div>
+      <div class="main-price">
+        <div class="price-label">결제 금액</div>
+        <div class="price-value">${data.total_price.toLocaleString('ko-KR')}원</div>
+      </div>
 
-      <div class="label">구매자</div>
-      <div class="value">${data.buyer_name}</div>
+      <div class="info-grid">
+        <div class="info-box">
+          <div class="info-box-label">구매자</div>
+          <div class="info-box-value">${data.buyer_name}</div>
+        </div>
+        <div class="info-box">
+          <div class="info-box-label">상품</div>
+          <div class="info-box-value">${data.product}</div>
+        </div>
+        <div class="info-box">
+          <div class="info-box-label">수량</div>
+          <div class="info-box-value">${data.quantity}잔</div>
+        </div>
+        <div class="info-box">
+          <div class="info-box-label">단가</div>
+          <div class="info-box-value">${data.price_per_unit.toLocaleString('ko-KR')}원</div>
+        </div>
+      </div>
 
-      <div class="label">상품</div>
-      <div class="value">${data.product}</div>
+      <div class="timeline">
+        <div class="timeline-label">구매 시각</div>
+        <div class="timeline-value">${timeStr}</div>
+      </div>
 
-      <div class="label">수량</div>
-      <div class="value">${data.quantity}</div>
-
-      <div class="label">단가</div>
-      <div class="value">${data.price_per_unit.toLocaleString('ko-KR')}원</div>
-
-      <div class="label">합계</div>
-      <div class="value" style="font-weight: 600; font-size: 18px;">${data.total_price.toLocaleString('ko-KR')}원</div>
-
-      <div class="label">구매 시각</div>
-      <div class="value">${new Date(data.purchased_at).toLocaleString('ko-KR')}</div>
+      <div class="button-group">
+        <a href="list.html" class="btn btn-primary">목록 보기</a>
+        <a href="index.html" class="btn btn-secondary">새 주문</a>
+      </div>
     `;
   } catch (e) {
     document.getElementById('detail').innerHTML = `<div class="error">오류: ${e.message}</div>`;
