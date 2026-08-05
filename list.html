@@ -31,68 +31,65 @@
   a { color: #5edb5a; text-decoration: none; font-weight: 600; }
   a:hover { color: #6fec69; }
 
-  .cards { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 16px; }
+  .cards { display: flex; flex-direction: column; gap: 8px; }
   .card {
     background: #1a2534;
     border: 1px solid #2d3e52;
-    border-radius: 12px;
-    padding: 16px;
+    border-radius: 8px;
+    padding: 12px 16px;
     cursor: pointer;
     transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    gap: 16px;
   }
   .card:hover {
     background: #212d3e;
     border-color: #5edb5a;
-    transform: translateY(-2px);
-    box-shadow: 0 8px 24px rgba(94, 219, 90, 0.15);
+    padding-left: 20px;
+    box-shadow: 0 4px 12px rgba(94, 219, 90, 0.1);
   }
+
   .card-id {
     font-size: 12px;
     color: #5edb5a;
     font-weight: 700;
-    margin-bottom: 8px;
     letter-spacing: 0.5px;
+    min-width: 40px;
   }
+
   .card-buyer {
-    font-size: 18px;
+    font-size: 15px;
     font-weight: 700;
-    margin-bottom: 12px;
-  }
-  .card-meta {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 12px;
-    margin-bottom: 12px;
-    font-size: 13px;
-    color: #a8b5c5;
-  }
-  .card-meta-item {
-    display: flex;
-    flex-direction: column;
-    gap: 4px;
-  }
-  .card-meta-label {
-    font-size: 12px;
-    color: #7a8998;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-  }
-  .card-meta-value {
-    font-size: 14px;
-    font-weight: 600;
     color: #e8eef5;
+    min-width: 80px;
   }
+
+  .card-product {
+    font-size: 14px;
+    color: #a8b5c5;
+    min-width: 100px;
+  }
+
+  .card-quantity {
+    font-size: 13px;
+    color: #7a8998;
+    min-width: 50px;
+  }
+
   .card-price {
-    font-size: 20px;
+    font-size: 15px;
     font-weight: 700;
     color: #5edb5a;
-    padding-top: 12px;
-    border-top: 1px solid #2d3e52;
+    min-width: 100px;
+    text-align: right;
   }
+
   .card-time {
     font-size: 12px;
     color: #7a8998;
-    margin-top: 8px;
+    min-width: 120px;
+    text-align: right;
   }
 </style>
 </head>
@@ -133,16 +130,8 @@ async function load() {
       <div class="card" data-id="${r.id}">
         <div class="card-id">#${r.id}</div>
         <div class="card-buyer">${r.buyer_name}</div>
-        <div class="card-meta">
-          <div class="card-meta-item">
-            <div class="card-meta-label">상품</div>
-            <div class="card-meta-value">${r.product}</div>
-          </div>
-          <div class="card-meta-item">
-            <div class="card-meta-label">수량</div>
-            <div class="card-meta-value">${r.quantity}잔</div>
-          </div>
-        </div>
+        <div class="card-product">${r.product}</div>
+        <div class="card-quantity">${r.quantity}잔</div>
         <div class="card-price">${r.total_price.toLocaleString('ko-KR')}원</div>
         <div class="card-time">${timeStr}</div>
       </div>
