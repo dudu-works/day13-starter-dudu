@@ -2,7 +2,7 @@
 // 키는 코드에 쓰지 않는다. Vercel 환경변수(SUPABASE_URL, SUPABASE_ANON_KEY)에서 읽는다.
 import { createClient } from "@supabase/supabase-js";
 
-const PRICES = { "아메리카노": 3000, "카페라떼": 4000, "율무차": 3500, "코코아": 4000, "우유": 2500 };
+const PRICES = { "아메리카노": 3000, "카페라떼": 4000, "율무차": 3500, "코코아": 4000, "우유": 2500, "크런치캬라멜크림콜드브루 프라푸치노": 6000 };
 
 export default async function handler(req, res) {
   const t0 = Date.now();
