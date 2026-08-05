@@ -33,77 +33,62 @@
   a { color: #5edb5a; text-decoration: none; font-weight: 600; }
   a:hover { color: #6fec69; }
 
-  .cards { display: flex; flex-direction: column; gap: 8px; }
+  .cards { display: flex; flex-direction: column; gap: 12px; }
   .card {
     background: #1a2534;
     border: 1px solid #2d3e52;
     border-radius: 8px;
-    padding: 12px 16px;
+    padding: 14px;
     cursor: pointer;
     transition: all 0.2s ease;
-    display: flex;
-    align-items: center;
-    gap: 16px;
   }
   .card:hover {
     background: #212d3e;
     border-color: #5edb5a;
-    padding-left: 20px;
     box-shadow: 0 4px 12px rgba(94, 219, 90, 0.1);
   }
 
-  .card-id {
-    font-size: 12px;
-    color: #5edb5a;
-    font-weight: 700;
-    letter-spacing: 0.5px;
-    width: 40px;
-    flex-shrink: 0;
+  .card-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 8px;
+  }
+  .card-row:last-child {
+    margin-bottom: 0;
   }
 
   .card-buyer {
     font-size: 15px;
     font-weight: 700;
     color: #e8eef5;
-    width: 195px;
-    flex-shrink: 0;
+    flex: 1;
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
-  }
-
-  .card-product {
-    font-size: 14px;
-    color: #a8b5c5;
-    width: 130px;
-    flex-shrink: 0;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-  }
-
-  .card-quantity {
-    font-size: 13px;
-    color: #7a8998;
-    width: 50px;
-    flex-shrink: 0;
   }
 
   .card-price {
     font-size: 15px;
     font-weight: 700;
     color: #5edb5a;
-    width: 120px;
     flex-shrink: 0;
-    text-align: right;
   }
 
-  .card-time {
+  .card-product {
+    font-size: 13px;
+    color: #a8b5c5;
+    flex: 1;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .card-meta {
     font-size: 12px;
     color: #7a8998;
-    width: 140px;
     flex-shrink: 0;
-    text-align: right;
   }
 
   .notice {
@@ -134,7 +119,7 @@
     </div>
 
     <div class="notice">
-      <strong>💡 실습 과제:</strong> 아래 주문을 클릭하면 <strong>detail.html</strong>의 상세 페이지가 열립니다. 여러분도 이 페이지를 만들어 보세요!
+      <strong>실습 과제:</strong> 아래 주문을 클릭하면 <strong>detail.html</strong>의 상세 페이지가 열립니다. 여러분도 이 페이지를 만들어 보세요!
     </div>
 
     <div class="cards" id="rows"></div>
@@ -174,12 +159,14 @@ async function load() {
     });
     return `
       <div class="card" data-id="${r.id}">
-        <div class="card-id">#${r.id}</div>
-        <div class="card-buyer">${r.buyer_name}</div>
-        <div class="card-product">${r.product}</div>
-        <div class="card-quantity">${r.quantity}잔</div>
-        <div class="card-price">${formatPrice(r.total_price)}</div>
-        <div class="card-time">${timeStr}</div>
+        <div class="card-row">
+          <div class="card-buyer">${r.buyer_name}</div>
+          <div class="card-price">${formatPrice(r.total_price)}</div>
+        </div>
+        <div class="card-row">
+          <div class="card-product">${r.product}</div>
+          <div class="card-meta">${r.quantity}잔 · ${timeStr}</div>
+        </div>
       </div>
     `;
   }).join('');

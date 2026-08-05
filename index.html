@@ -5,30 +5,22 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>커피 주문 등록 - Day13</title>
 <style>
-  :root {
-    --ink: #183027;
-    --muted: #64736c;
-    --paper: #f7f5ed;
-    --panel: #fffdf6;
-    --line: #d7dbcf;
-    --green: #257357;
-    --green-soft: #dff0e7;
-    --orange: #dd7b35;
-  }
-  * { box-sizing: border-box; }
-  body { font-family: "Apple SD Gothic Neo", Pretendard, sans-serif; color: var(--ink); background: var(--paper); width: 100%; max-width: 480px; margin: 0 auto; padding: 0 16px; box-sizing: border-box; }
-  h1 { font-size: 22px; margin: 0 0 4px; }
-  p.lead { color: var(--muted); font-size: 14px; margin: 0 0 18px; }
-  .card { background: var(--panel); border: 1px solid var(--line); border-radius: 14px; padding: 22px; }
-  label { display: block; margin: 14px 0 4px; font-weight: 700; font-size: 14px; }
-  input, select { width: 100%; padding: 10px 12px; border: 1px solid #bfc9bf; border-radius: 8px; font-size: 15px; background: #fff; color: var(--ink); font-family: inherit; }
-  input:focus, select:focus { outline: 3px solid var(--green-soft); border-color: var(--green); }
-  button { margin-top: 18px; width: 100%; padding: 12px 22px; background: var(--orange); color: #fff; border: 0; border-radius: 8px; font-size: 15px; font-weight: 700; cursor: pointer; }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: "Apple SD Gothic Neo", Pretendard, sans-serif; color: #e8eef5; background: #0e1620; width: 100%; max-width: 480px; margin: 0 auto; padding: 20px 16px; box-sizing: border-box; }
+  h1 { font-size: 28px; margin: 0 0 8px; font-weight: 700; }
+  p.lead { color: #a8b5c5; font-size: 14px; margin: 0 0 24px; }
+  .card { background: #1a2534; border: 1px solid #2d3e52; border-radius: 12px; padding: 24px; }
+  label { display: block; margin: 16px 0 6px; font-weight: 700; font-size: 14px; color: #a8b5c5; }
+  input, select { width: 100%; padding: 12px; border: 1px solid #2d3e52; border-radius: 8px; font-size: 15px; background: #0e1620; color: #e8eef5; font-family: inherit; }
+  input:focus, select:focus { outline: 3px solid rgba(94, 219, 90, 0.3); border-color: #5edb5a; }
+  button { margin-top: 24px; width: 100%; padding: 14px 22px; background: #5edb5a; color: #000; border: 0; border-radius: 8px; font-size: 15px; font-weight: 700; cursor: pointer; transition: all 0.2s ease; }
+  button:hover { background: #6fec69; }
   button:disabled { opacity: .55; cursor: wait; }
-  .msg { margin-top: 14px; font-size: 14px; display: none; padding: 10px 12px; border-radius: 8px; }
-  .msg.ok { display: block; background: var(--green-soft); color: var(--green); }
-  .msg.err { display: block; background: #fbeae2; color: #b23c1a; }
-  a { color: var(--green); }
+  .msg { margin-top: 14px; font-size: 14px; display: none; padding: 12px 14px; border-radius: 8px; border-left: 4px solid; }
+  .msg.ok { display: block; background: rgba(94, 219, 90, 0.1); border-left-color: #5edb5a; color: #5edb5a; }
+  .msg.err { display: block; background: rgba(255, 107, 107, 0.1); border-left-color: #ff6b6b; color: #ff6b6b; }
+  a { color: #5edb5a; text-decoration: none; font-weight: 600; }
+  a:hover { color: #6fec69; }
 </style>
 <script defer src="/_vercel/insights/script.js"></script>
 </head>
