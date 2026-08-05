@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>주문 상세</title>
+<style>
+  body { font-family: "Apple SD Gothic Neo", sans-serif; max-width: 600px; margin: 40px auto; padding: 0 16px; color: #1b1d21; }
+  h1 { font-size: 24px; margin-bottom: 24px; }
+  .detail { display: grid; grid-template-columns: 100px 1fr; gap: 16px; }
+  .label { font-weight: 600; }
+  .value { word-break: break-all; }
+  .meta { margin-top: 24px; }
+  a { color: #0d6d64; text-decoration: none; font-size: 14px; }
+  a:hover { text-decoration: underline; }
+  .error { color: #d32f2f; }
+  .loading { color: #999; }
+</style>
+</head>
+<body>
+  <h1>주문 상세</h1>
+
+  <div id="detail" class="detail">
+    <div class="loading">로드 중...</div>
+  </div>
+
+  <div class="meta">
+    <a href="list.html">← 목록으로</a>
+  </div>
+
+<script>
+async function load() {
+  const params = new URLSearchParams(window.location.search);
+  const id = params.get('id');
+
+  if (!id) {
+    document.getElementById('detail').innerHTML = '<div class="error">주문 번호가 없습니다</div>';
+    return;
+  }
+
+  try {
+    const res = await fetch(`/api/list?id=${id}`);
+    if (!res.ok) throw new Error('조회 실패');
+
+    const data = await res.json();
+    document.getElementById('detail').innerHTML = `
+      <div class="label">주문 번호</div>
+      <div class="value">${data.id}</div>
+
+      <div class="label">구매자</div>
+      <div class="value">${data.buyer_name}</div>
+
+      <div class="label">상품</div>
+      <div class="value">${data.product}</div>
+
+      <div class="label">수량</div>
+      <div class="value">${data.quantity}</div>
+
+      <div class="label">단가</div>
+      <div class="value">${data.price_per_unit.toLocaleString('ko-KR')}원</div>
+
+      <div class="label">합계</div>
+      <div class="value" style="font-weight: 600; font-size: 18px;">${data.total_price.toLocaleString('ko-KR')}원</div>
+
+      <div class="label">구매 시각</div>
+      <div class="value">${new Date(data.purchased_at).toLocaleString('ko-KR')}</div>
+    `;
+  } catch (e) {
+    document.getElementById('detail').innerHTML = `<div class="error">오류: ${e.message}</div>`;
+  }
+}
+
+load();
+</script>
+</body>
+</html>

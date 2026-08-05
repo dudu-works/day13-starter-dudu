@@ -13,6 +13,8 @@
   th { background: #f4f2ee; }
   td.num { text-align: right; font-variant-numeric: tabular-nums; }
   a { color: #0d6d64; }
+  tbody tr { cursor: pointer; }
+  tbody tr:hover { background: #f9f8f6; }
 </style>
 </head>
 <body>
@@ -32,8 +34,9 @@ async function load() {
   }
   const rows = await res.json();
   document.getElementById('count').textContent = '총 ' + rows.length + '건';
-  document.getElementById('rows').innerHTML = rows.map(r =>
-    `<tr>
+  const tbody = document.getElementById('rows');
+  tbody.innerHTML = rows.map(r =>
+    `<tr data-id="${r.id}">
        <td>${r.id}</td>
        <td>${r.buyer_name}</td>
        <td>${r.product}</td>
@@ -41,6 +44,12 @@ async function load() {
        <td class="num">${r.total_price.toLocaleString('ko-KR')}원</td>
        <td>${new Date(r.purchased_at).toLocaleString('ko-KR')}</td>
      </tr>`).join('');
+
+  tbody.querySelectorAll('tr').forEach(row => {
+    row.addEventListener('click', () => {
+      window.location.href = `detail.html?id=${row.dataset.id}`;
+    });
+  });
 }
 load();
 </script>
