@@ -5,49 +5,153 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>판매 현황</title>
 <style>
-  body { font-family: "Apple SD Gothic Neo", sans-serif; max-width: 760px; margin: 40px auto; padding: 0 16px; color: #1b1d21; }
-  h1 { font-size: 24px; }
-  .meta { color: #666; font-size: 14px; margin-bottom: 16px; }
-  table { border-collapse: collapse; width: 100%; }
-  th, td { border: 1px solid #ddd; padding: 8px 12px; font-size: 14px; text-align: left; }
-  th { background: #f4f2ee; }
-  td.num { text-align: right; font-variant-numeric: tabular-nums; }
-  a { color: #0d6d64; }
-  tbody tr { cursor: pointer; }
-  tbody tr:hover { background: #f9f8f6; }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: "Apple SD Gothic Neo", sans-serif;
+    background: #0e1620;
+    color: #fff;
+    padding: 20px;
+    min-height: 100vh;
+  }
+  .container { max-width: 900px; margin: 0 auto; }
+  .header { margin-bottom: 32px; }
+  h1 {
+    font-size: 28px;
+    margin-bottom: 8px;
+    font-weight: 700;
+  }
+  .meta {
+    color: #a8b5c5;
+    font-size: 14px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .meta-left { display: flex; gap: 12px; }
+  a { color: #5edb5a; text-decoration: none; font-weight: 600; }
+  a:hover { color: #6fec69; }
+
+  .cards { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 16px; }
+  .card {
+    background: #1a2534;
+    border: 1px solid #2d3e52;
+    border-radius: 12px;
+    padding: 16px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }
+  .card:hover {
+    background: #212d3e;
+    border-color: #5edb5a;
+    transform: translateY(-2px);
+    box-shadow: 0 8px 24px rgba(94, 219, 90, 0.15);
+  }
+  .card-id {
+    font-size: 12px;
+    color: #5edb5a;
+    font-weight: 700;
+    margin-bottom: 8px;
+    letter-spacing: 0.5px;
+  }
+  .card-buyer {
+    font-size: 18px;
+    font-weight: 700;
+    margin-bottom: 12px;
+  }
+  .card-meta {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    margin-bottom: 12px;
+    font-size: 13px;
+    color: #a8b5c5;
+  }
+  .card-meta-item {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+  .card-meta-label {
+    font-size: 12px;
+    color: #7a8998;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+  .card-meta-value {
+    font-size: 14px;
+    font-weight: 600;
+    color: #e8eef5;
+  }
+  .card-price {
+    font-size: 20px;
+    font-weight: 700;
+    color: #5edb5a;
+    padding-top: 12px;
+    border-top: 1px solid #2d3e52;
+  }
+  .card-time {
+    font-size: 12px;
+    color: #7a8998;
+    margin-top: 8px;
+  }
 </style>
 </head>
 <body>
-  <h1>커피 자판기 판매 현황</h1>
-  <p class="meta">최신 구매가 맨 위에 옵니다. <span id="count"></span> · <a href="index.html">주문 등록하기</a></p>
-  <table>
-    <thead><tr><th>#</th><th>구매자</th><th>상품</th><th>수량</th><th>금액</th><th>구매 시각</th></tr></thead>
-    <tbody id="rows"></tbody>
-  </table>
+  <div class="container">
+    <div class="header">
+      <h1>☕ 판매 현황</h1>
+      <div class="meta">
+        <div class="meta-left">
+          <span id="count">로드 중...</span>
+        </div>
+        <a href="index.html">+ 주문 등록</a>
+      </div>
+    </div>
+    <div class="cards" id="rows"></div>
+  </div>
 
 <script>
 async function load() {
   const res = await fetch('/api/list');
   if (!res.ok) {
-    document.getElementById('count').textContent = '불러오기에 실패했습니다';
+    document.getElementById('count').textContent = '불러오기 실패';
     return;
   }
   const rows = await res.json();
-  document.getElementById('count').textContent = '총 ' + rows.length + '건';
-  const tbody = document.getElementById('rows');
-  tbody.innerHTML = rows.map(r =>
-    `<tr data-id="${r.id}">
-       <td>${r.id}</td>
-       <td>${r.buyer_name}</td>
-       <td>${r.product}</td>
-       <td class="num">${r.quantity}</td>
-       <td class="num">${r.total_price.toLocaleString('ko-KR')}원</td>
-       <td>${new Date(r.purchased_at).toLocaleString('ko-KR')}</td>
-     </tr>`).join('');
+  document.getElementById('count').textContent = `총 ${rows.length}건`;
 
-  tbody.querySelectorAll('tr').forEach(row => {
-    row.addEventListener('click', () => {
-      window.location.href = `detail.html?id=${row.dataset.id}`;
+  const container = document.getElementById('rows');
+  container.innerHTML = rows.map(r => {
+    const date = new Date(r.purchased_at);
+    const timeStr = date.toLocaleString('ko-KR', {
+      month: 'short',
+      day: 'numeric',
+      hour: '2-digit',
+      minute: '2-digit'
+    });
+    return `
+      <div class="card" data-id="${r.id}">
+        <div class="card-id">#${r.id}</div>
+        <div class="card-buyer">${r.buyer_name}</div>
+        <div class="card-meta">
+          <div class="card-meta-item">
+            <div class="card-meta-label">상품</div>
+            <div class="card-meta-value">${r.product}</div>
+          </div>
+          <div class="card-meta-item">
+            <div class="card-meta-label">수량</div>
+            <div class="card-meta-value">${r.quantity}잔</div>
+          </div>
+        </div>
+        <div class="card-price">${r.total_price.toLocaleString('ko-KR')}원</div>
+        <div class="card-time">${timeStr}</div>
+      </div>
+    `;
+  }).join('');
+
+  container.querySelectorAll('.card').forEach(card => {
+    card.addEventListener('click', () => {
+      window.location.href = `detail.html?id=${card.dataset.id}`;
     });
   });
 }
