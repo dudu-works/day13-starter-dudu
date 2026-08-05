@@ -59,33 +59,40 @@
   }
 
   .info-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 12px;
     margin-bottom: 24px;
   }
 
   .info-box {
-    background: #1a2534;
-    border: 1px solid #2d3e52;
-    border-radius: 12px;
-    padding: 16px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: transparent;
+    border: none;
+    border-radius: 0;
+    padding: 14px 0;
+    border-bottom: 1px solid #2d3e52;
   }
+  .info-box:last-child {
+    border-bottom: none;
+  }
+
   .info-box-label {
     font-size: 12px;
     color: #7a8998;
     text-transform: uppercase;
     letter-spacing: 0.5px;
-    margin-bottom: 6px;
+    margin-bottom: 0;
+    min-width: 100px;
   }
   .info-box-value {
-    font-size: 18px;
-    font-weight: 700;
+    font-size: 16px;
+    font-weight: 600;
     color: #e8eef5;
+    text-align: right;
   }
 
   .info-box-large {
-    grid-column: 1 / -1;
+    /* 세로 리스트에서는 불필요 */
   }
   .info-box-large .info-box-value {
     font-size: 16px;
