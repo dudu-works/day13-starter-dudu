@@ -138,6 +138,19 @@
   </div>
 
 <script>
+function formatPrice(price) {
+  const parts = [];
+  const man = Math.floor(price / 10000);
+  const cheon = Math.floor((price % 10000) / 1000);
+  const baek = Math.floor((price % 1000) / 100);
+
+  if (man > 0) parts.push(man + '만');
+  if (cheon > 0) parts.push(cheon + '천');
+  if (baek > 0) parts.push(baek + '백');
+
+  return parts.join(' ') + '원';
+}
+
 async function load() {
   const res = await fetch('/api/list');
   if (!res.ok) {
@@ -162,7 +175,7 @@ async function load() {
         <div class="card-buyer">${r.buyer_name}</div>
         <div class="card-product">${r.product}</div>
         <div class="card-quantity">${r.quantity}잔</div>
-        <div class="card-price">${r.total_price.toLocaleString('ko-KR')}원</div>
+        <div class="card-price">${formatPrice(r.total_price)}</div>
         <div class="card-time">${timeStr}</div>
       </div>
     `;

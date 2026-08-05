@@ -178,6 +178,19 @@
   </div>
 
 <script>
+function formatPrice(price) {
+  const parts = [];
+  const man = Math.floor(price / 10000);
+  const cheon = Math.floor((price % 10000) / 1000);
+  const baek = Math.floor((price % 1000) / 100);
+
+  if (man > 0) parts.push(man + '만');
+  if (cheon > 0) parts.push(cheon + '천');
+  if (baek > 0) parts.push(baek + '백');
+
+  return parts.join(' ') + '원';
+}
+
 async function load() {
   const params = new URLSearchParams(window.location.search);
   const id = params.get('id');
@@ -200,7 +213,7 @@ async function load() {
     document.getElementById('detail').innerHTML = `
       <div class="main-price">
         <div class="price-label">결제 금액</div>
-        <div class="price-value">${data.total_price.toLocaleString('ko-KR')}원</div>
+        <div class="price-value">${formatPrice(data.total_price)}</div>
       </div>
 
       <div class="info-grid">
@@ -218,7 +231,7 @@ async function load() {
         </div>
         <div class="info-box">
           <div class="info-box-label">단가</div>
-          <div class="info-box-value">${data.price_per_unit.toLocaleString('ko-KR')}원</div>
+          <div class="info-box-value">${formatPrice(data.price_per_unit)}</div>
         </div>
       </div>
 
