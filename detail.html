@@ -10,43 +10,95 @@
     font-family: "Apple SD Gothic Neo", sans-serif;
     background: #0e1620;
     color: #fff;
-    min-height: 100vh;
-    padding-bottom: 40px;
     width: 100%;
     box-sizing: border-box;
+    padding-top: 56px;
+    padding-bottom: 80px;
+    min-height: 100vh;
   }
 
-  .header {
-    background: linear-gradient(135deg, #5edb5a 0%, #4ec64e 100%);
-    padding: 20px;
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    margin-bottom: 32px;
+  .navbar {
+    position: fixed;
+    top: 0;
     width: 100%;
     max-width: 480px;
-    margin-left: auto;
-    margin-right: auto;
-    box-sizing: border-box;
+    left: 50%;
+    transform: translateX(-50%);
+    background: #1a2534;
+    border-bottom: 1px solid #2d3e52;
+    padding: 0;
+    display: flex;
+    height: 56px;
+    align-items: center;
+    z-index: 100;
   }
-  .header-back {
-    font-size: 24px;
-    cursor: pointer;
-    opacity: 0.9;
-    transition: opacity 0.2s;
-  }
-  .header-back:hover { opacity: 1; }
-  .header-title {
-    font-size: 24px;
-    font-weight: 700;
+  .navbar a {
     flex: 1;
+    text-align: center;
+    padding: 16px 0;
+    font-size: 13px;
+    font-weight: 600;
+    border-bottom: 3px solid transparent;
+    transition: all 0.2s ease;
+    text-decoration: none;
   }
-  .header-icon {
-    font-size: 24px;
-    opacity: 0.8;
+  .navbar a.active {
+    color: #5edb5a;
+    border-bottom-color: #5edb5a;
+  }
+  .navbar a:not(.active) {
+    color: #a8b5c5;
+  }
+  .navbar a:not(.active):hover {
+    color: #e8eef5;
   }
 
-  .container { width: 100%; max-width: 480px; margin: 0 auto; padding: 0 20px; box-sizing: border-box; }
+  .footer {
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+    max-width: 480px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: #1a2534;
+    border-top: 1px solid #2d3e52;
+    padding: 12px 16px;
+    display: flex;
+    gap: 12px;
+    z-index: 100;
+  }
+  .footer .btn-footer {
+    flex: 1;
+    padding: 14px 16px;
+    border: none;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    text-decoration: none;
+    display: block;
+    text-align: center;
+  }
+  .footer .btn-negative {
+    background: transparent;
+    color: #2b7ae8;
+    border: 2px solid #2b7ae8;
+  }
+  .footer .btn-negative:hover {
+    background: rgba(43, 122, 232, 0.1);
+  }
+  .footer .btn-positive {
+    background: #5edb5a;
+    color: #000;
+  }
+  .footer .btn-positive:hover {
+    background: #6fec69;
+  }
+
+  .content { padding: 20px; }
+
+  .container { width: 100%; max-width: 480px; margin: 0 auto; box-sizing: border-box; }
 
   .main-price {
     text-align: center;
@@ -125,40 +177,6 @@
     font-weight: 600;
   }
 
-  .button-group {
-    display: flex;
-    gap: 12px;
-  }
-  .btn {
-    flex: 1;
-    padding: 16px;
-    border: none;
-    border-radius: 12px;
-    font-size: 16px;
-    font-weight: 700;
-    cursor: pointer;
-    transition: all 0.2s ease;
-    text-decoration: none;
-    display: block;
-    text-align: center;
-  }
-  .btn-primary {
-    background: #5edb5a;
-    color: #000;
-  }
-  .btn-primary:hover {
-    background: #6fec69;
-    transform: translateY(-2px);
-  }
-  .btn-secondary {
-    background: transparent;
-    color: #2b7ae8;
-    border: 2px solid #2b7ae8;
-  }
-  .btn-secondary:hover {
-    background: rgba(43, 122, 232, 0.1);
-    transform: translateY(-2px);
-  }
 
   .error {
     text-align: center;
@@ -176,27 +194,22 @@
 <script defer src="/_vercel/insights/script.js"></script>
 </head>
 <body>
-  <div class="header">
-    <div class="header-back" onclick="window.location.href='list.html'">←</div>
-    <div class="header-title" id="header-title">주문 상세</div>
+  <div class="navbar">
+    <a href="index.html">주문 등록</a>
+    <a href="list.html" class="active">판매 현황</a>
   </div>
 
-  <div class="container">
-    <div id="detail" class="loading">로드 중...</div>
+  <div class="content">
+    <div class="container">
+      <div id="detail" class="loading">로드 중...</div>
+    </div>
   </div>
+
+  <div class="footer" id="footer"></div>
 
 <script>
 function formatPrice(price) {
-  const parts = [];
-  const man = Math.floor(price / 10000);
-  const cheon = Math.floor((price % 10000) / 1000);
-  const baek = Math.floor((price % 1000) / 100);
-
-  if (man > 0) parts.push(`<strong>${man}</strong>만`);
-  if (cheon > 0) parts.push(`<strong>${cheon}</strong>천`);
-  if (baek > 0) parts.push(`<strong>${baek}</strong>백`);
-
-  return parts.join(' ') + '원';
+  return price.toLocaleString('ko-KR') + '원';
 }
 
 async function load() {
@@ -215,8 +228,6 @@ async function load() {
     const data = await res.json();
     const date = new Date(data.purchased_at);
     const timeStr = date.toLocaleString('ko-KR');
-
-    document.getElementById('header-title').textContent = `#${data.id}`;
 
     document.getElementById('detail').innerHTML = `
       <div class="main-price">
@@ -247,11 +258,11 @@ async function load() {
         <div class="timeline-label">구매 시각</div>
         <div class="timeline-value">${timeStr}</div>
       </div>
+    `;
 
-      <div class="button-group">
-        <a href="index.html" class="btn btn-secondary">새 주문</a>
-        <a href="list.html" class="btn btn-primary">목록 보기</a>
-      </div>
+    document.getElementById('footer').innerHTML = `
+      <a href="list.html" class="btn-footer btn-negative">목록 보기</a>
+      <a href="index.html" class="btn-footer btn-positive">새 주문</a>
     `;
   } catch (e) {
     document.getElementById('detail').innerHTML = `<div class="error">오류: ${e.message}</div>`;
