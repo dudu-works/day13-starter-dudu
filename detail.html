@@ -12,6 +12,8 @@
     color: #fff;
     min-height: 100vh;
     padding-bottom: 40px;
+    width: 100%;
+    box-sizing: border-box;
   }
 
   .header {
@@ -39,7 +41,7 @@
     opacity: 0.8;
   }
 
-  .container { max-width: 600px; margin: 0 auto; padding: 0 20px; }
+  .container { width: 100%; max-width: 480px; margin: 0 auto; padding: 0 20px; box-sizing: border-box; }
 
   .main-price {
     text-align: center;
@@ -144,11 +146,12 @@
     transform: translateY(-2px);
   }
   .btn-secondary {
-    background: #2b7ae8;
-    color: #fff;
+    background: transparent;
+    color: #2b7ae8;
+    border: 2px solid #2b7ae8;
   }
   .btn-secondary:hover {
-    background: #3a88f5;
+    background: rgba(43, 122, 232, 0.1);
     transform: translateY(-2px);
   }
 
@@ -171,7 +174,6 @@
   <div class="header">
     <div class="header-back" onclick="window.location.href='list.html'">←</div>
     <div class="header-title" id="header-title">주문 상세</div>
-    <div class="header-icon">☕</div>
   </div>
 
   <div class="container">
@@ -185,9 +187,9 @@ function formatPrice(price) {
   const cheon = Math.floor((price % 10000) / 1000);
   const baek = Math.floor((price % 1000) / 100);
 
-  if (man > 0) parts.push(man + '만');
-  if (cheon > 0) parts.push(cheon + '천');
-  if (baek > 0) parts.push(baek + '백');
+  if (man > 0) parts.push(`<strong>${man}</strong>만`);
+  if (cheon > 0) parts.push(`<strong>${cheon}</strong>천`);
+  if (baek > 0) parts.push(`<strong>${baek}</strong>백`);
 
   return parts.join(' ') + '원';
 }

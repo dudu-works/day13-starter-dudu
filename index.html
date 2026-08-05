@@ -16,7 +16,7 @@
     --orange: #dd7b35;
   }
   * { box-sizing: border-box; }
-  body { font-family: "Apple SD Gothic Neo", Pretendard, sans-serif; color: var(--ink); background: var(--paper); max-width: 480px; margin: 40px auto; padding: 0 16px; }
+  body { font-family: "Apple SD Gothic Neo", Pretendard, sans-serif; color: var(--ink); background: var(--paper); width: 100%; max-width: 480px; margin: 0 auto; padding: 0 16px; box-sizing: border-box; }
   h1 { font-size: 22px; margin: 0 0 4px; }
   p.lead { color: var(--muted); font-size: 14px; margin: 0 0 18px; }
   .card { background: var(--panel); border: 1px solid var(--line); border-radius: 14px; padding: 22px; }
@@ -33,7 +33,7 @@
 <script defer src="/_vercel/insights/script.js"></script>
 </head>
 <body>
-  <h1>커피 주문 등록</h1>
+  <h1>주문 등록</h1>
   <p class="lead">주문 1건을 등록하면 판매 표에 행으로 쌓입니다. <a href="list.html">판매 현황 보기</a></p>
   <div class="card">
     <form id="order-form">
@@ -42,12 +42,12 @@
 
       <label for="product">메뉴</label>
       <select id="product" name="product" required>
-        <option value="아메리카노">아메리카노 (3천원)</option>
-        <option value="카페라떼">카페라떼 (4천원)</option>
-        <option value="율무차">율무차 (3천 5백원)</option>
-        <option value="코코아">코코아 (4천원)</option>
-        <option value="우유">우유 (2천 5백원)</option>
-        <option value="크런치캬라멜크림콜드브루 프라푸치노">크런치캬라멜크림콜드브루 프라푸치노 (6천원)</option>
+        <option value="아메리카노">아메리카노 (<strong>3</strong>천원)</option>
+        <option value="카페라떼">카페라떼 (<strong>4</strong>천원)</option>
+        <option value="율무차">율무차 (<strong>3</strong>천 <strong>5</strong>백원)</option>
+        <option value="코코아">코코아 (<strong>4</strong>천원)</option>
+        <option value="우유">우유 (<strong>2</strong>천 <strong>5</strong>백원)</option>
+        <option value="크런치캬라멜크림콜드브루 프라푸치노">크런치캬라멜크림콜드브루 프라푸치노 (<strong>6</strong>천원)</option>
       </select>
 
       <label for="quantity">수량</label>
